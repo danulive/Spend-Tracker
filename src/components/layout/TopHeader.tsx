@@ -4,6 +4,7 @@ import {
   CloudCheck,
   CloudOff,
   HardDrive,
+  Plus,
   RefreshCw,
   Search,
   X,
@@ -19,6 +20,7 @@ export interface TopHeaderProps {
   user?: UserProfileSummary
   onAvatarClick: () => void
   onSyncClick?: () => void
+  onAddPaymentClick?: () => void
 }
 
 const SYNC_META: Record<
@@ -60,6 +62,7 @@ export function TopHeader({
   user,
   onAvatarClick,
   onSyncClick,
+  onAddPaymentClick,
 }: TopHeaderProps) {
   const shouldReduceMotion = useReducedMotion()
   const syncMeta = SYNC_META[syncStatus]
@@ -110,13 +113,13 @@ export function TopHeader({
   }
 
   return (
-    <header className="sticky top-0 z-30 -mx-4 px-4 pb-3 pt-3 bg-spend-bg/80 backdrop-blur-xl">
-      <div className="flex items-center gap-3">
+    <header className="sticky top-0 z-30 -mx-4 px-4 pb-3 pt-3 bg-spend-bg/80 backdrop-blur-xl lg:static lg:mx-0 lg:px-0 lg:pt-0 lg:pb-5 lg:bg-transparent lg:backdrop-blur-none">
+      <div className="flex items-center gap-3 lg:justify-between">
         <button
           type="button"
           onClick={onAvatarClick}
           aria-label="Open account"
-          className="h-10 w-10 shrink-0 rounded-full border border-spend-text/[0.10] flex items-center justify-center overflow-hidden active:scale-[0.95] transition-transform duration-100 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-spend-accent focus-visible:ring-offset-2 focus-visible:ring-offset-spend-bg"
+          className="h-10 w-10 shrink-0 rounded-full border border-spend-text/[0.10] flex items-center justify-center overflow-hidden active:scale-[0.95] transition-transform duration-100 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-spend-accent focus-visible:ring-offset-2 focus-visible:ring-offset-spend-bg lg:hidden"
         >
           <UserAvatar
             src={user?.avatarUrl}
@@ -125,7 +128,7 @@ export function TopHeader({
           />
         </button>
 
-        <div className="flex-1 min-w-0 h-10 rounded-full bg-spend-raised border border-spend-text/[0.10] px-3.5 flex items-center gap-2 focus-within:border-spend-accent/60 transition-colors">
+        <div className="flex-1 min-w-0 lg:max-w-[440px] h-10 rounded-full bg-spend-raised border border-spend-text/[0.10] px-3.5 flex items-center gap-2 focus-within:border-spend-accent/60 transition-colors">
           <Search
             className="h-4 w-4 shrink-0 text-spend-muted"
             aria-hidden="true"
@@ -150,15 +153,28 @@ export function TopHeader({
           )}
         </div>
 
-        <button
-          type="button"
-          onClick={onSyncClick}
-          title={syncMeta.title}
-          aria-label={syncMeta.ariaLabel}
-          className="h-10 w-10 shrink-0 rounded-full bg-spend-raised border border-spend-text/[0.10] relative flex items-center justify-center active:scale-[0.95] transition-transform duration-100 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-spend-accent focus-visible:ring-offset-2 focus-visible:ring-offset-spend-bg"
-        >
-          {renderSyncIcon()}
-        </button>
+        <div className="flex items-center gap-2.5 shrink-0">
+          {onAddPaymentClick && (
+            <button
+              type="button"
+              onClick={onAddPaymentClick}
+              className="hidden lg:inline-flex items-center gap-1.5 h-10 rounded-full bg-spend-accent text-spend-bg px-4 text-xs font-semibold shrink-0 active:scale-[0.97] transition-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-spend-accent focus-visible:ring-offset-2 focus-visible:ring-offset-spend-bg"
+            >
+              <Plus className="h-4 w-4" aria-hidden="true" />
+              <span>Add Payment</span>
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={onSyncClick}
+            title={syncMeta.title}
+            aria-label={syncMeta.ariaLabel}
+            className="h-10 w-10 shrink-0 rounded-full bg-spend-raised border border-spend-text/[0.10] relative flex items-center justify-center active:scale-[0.95] transition-transform duration-100 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-spend-accent focus-visible:ring-offset-2 focus-visible:ring-offset-spend-bg"
+          >
+            {renderSyncIcon()}
+          </button>
+        </div>
       </div>
     </header>
   )

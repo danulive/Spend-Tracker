@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion'
-import { Loader2, ShieldCheck, TrendingDown, Wallet } from 'lucide-react'
+import { ExternalLink, Loader2, ShieldCheck, TrendingDown, Wallet } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { cn } from '../../lib/cn'
 import { APPLE_SPRING } from '../../lib/motion'
@@ -13,7 +13,7 @@ export function SignInScreen() {
   const isSigningIn = status === 'signing_in'
 
   return (
-    <MobileFrame className="flex flex-col justify-between min-h-dvh py-10">
+    <MobileFrame className="lg:max-w-[440px] lg:mx-auto min-h-dvh flex flex-col justify-between py-10 lg:py-10">
       <motion.div
         initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -144,6 +144,25 @@ export function SignInScreen() {
           Only requests access to SpendTracker&apos;s hidden app data folder in
           your Google Drive.
         </p>
+
+        <footer className="pt-6 pb-2 text-center text-xs text-spend-muted">
+          <span>Developed by Danulive</span>
+          <span aria-hidden="true" className="mx-1.5">
+            ·
+          </span>
+          <a
+            href="https://github.com/danulive"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-spend-text hover:text-spend-accent transition-colors underline-offset-4 hover:underline inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-spend-accent rounded"
+          >
+            <span>GitHub</span>
+            <ExternalLink
+              className="h-3 w-3 inline ml-0.5 -mt-0.5"
+              aria-hidden="true"
+            />
+          </a>
+        </footer>
       </div>
     </MobileFrame>
   )

@@ -1,4 +1,5 @@
 import { ReceiptText } from 'lucide-react'
+import { useIsDesktop } from '../../hooks/useIsDesktop'
 import { filterTransactions } from '../../lib/analytics'
 import type { Transaction } from '../../types/ledger'
 import { BentoCard } from '../ui/BentoCard'
@@ -20,10 +21,14 @@ export function RecentPaymentsSection({
   onSelectTransaction,
   onViewAll,
 }: RecentPaymentsSectionProps) {
+  const isDesktop = useIsDesktop()
   const trimmedQuery = searchQuery.trim()
   const isSearching = trimmedQuery.length > 0
   const filtered = filterTransactions(transactions, searchQuery)
-  const visibleTransactions = isSearching ? filtered : filtered.slice(0, 10)
+  const visibleLimit = isDesktop ? 15 : 10
+  const visibleTransactions = isSearching
+    ? filtered
+    : filtered.slice(0, visibleLimit)
 
   return (
     <div>

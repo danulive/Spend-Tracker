@@ -16,6 +16,7 @@ export interface HomeScreenProps {
   searchQuery: string
   onViewAllHistory: () => void
   onOpenAnalytics?: () => void
+  onOpenAddPayment?: () => void
   user?: UserProfileSummary
 }
 
@@ -24,6 +25,7 @@ export function HomeScreen({
   searchQuery,
   onViewAllHistory,
   onOpenAnalytics,
+  onOpenAddPayment,
   user,
 }: HomeScreenProps) {
   const { ledger, metrics } = useLedger()
@@ -36,73 +38,94 @@ export function HomeScreen({
     setLastSavedTx(null)
   }, [])
 
+  const handleTriggerAddPayment = () => {
+    if (onOpenAddPayment) {
+      onOpenAddPayment()
+    } else {
+      setIsAddPaymentOpen(true)
+    }
+  }
+
   return (
     <div>
-      <PaymentReceiptToast
-        transaction={lastSavedTx}
-        currencySymbol={ledger.settings.currencySymbol}
-        onDismiss={handleDismissToast}
-      />
-
-      <WalletCard
-        balance={ledger.walletBalance}
-        currencySymbol={ledger.settings.currencySymbol}
-        currencyCode={ledger.settings.currencyCode}
-        accountName={user?.name}
-        lastAdjustmentTimestamp={ledger.walletAdjustments[0]?.timestamp}
-        onOpenAdjust={() => setIsWalletDrawerOpen(true)}
-      />
-
-      <section
-        aria-label="Spending summary"
-        className="mt-3.5 grid grid-cols-2 gap-3"
-      >
-        <SpendingBentoCard
-          metrics={metrics}
+      {!onOpenAddPayment && (
+        <PaymentReceiptToast
+          transaction={lastSavedTx}
           currencySymbol={ledger.settings.currencySymbol}
-          onNavigateAnalytics={onOpenAnalytics}
+          onDismiss={handleDismissToast}
         />
-        <DailyProofBentoCard
-          metrics={metrics}
-          currencySymbol={ledger.settings.currencySymbol}
-          onNavigateAnalytics={onOpenAnalytics}
-        />
-      </section>
+      )}
 
-      <button
-        type="button"
-        onClick={() => setIsAddPaymentOpen(true)}
-        className="mt-3.5 w-full rounded-[20px] bg-spend-accent text-spend-bg px-5 py-3.5 font-semibold text-[15px] flex items-center justify-between active:scale-[0.98] transition-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-spend-accent focus-visible:ring-offset-2 focus-visible:ring-offset-spend-bg"
-      >
-        <span className="flex items-center gap-2.5">
-          <span className="bg-spend-bg/15 rounded-full p-1 inline-flex items-center justify-center">
-            <Plus className="h-4 w-4" aria-hidden="true" />
-          </span>
-          <span>Add Payment</span>
-        </span>
-        <span className="text-xs font-medium text-spend-bg/70">Log expense</span>
-      </button>
+      <div className="lg:grid lg:grid-cols-12 lg:gap-6 lg:items-start">
+        <div className="lg:col-span-5 lg:space-y-4">
+          <WalletCard
+            balance={ledger.walletBalance}
+            currencySymbol={ledger.settings.currencySymbol}
+            currencyCode={ledger.settings.currencyCode}
+            accountName={user?.name}
+            lastAdjustmentTimestamp={ledger.walletAdjustments[0]?.timestamp}
+            onOpenAdjust={() => setIsWalletDrawerOpen(true)}
+          />
 
-      <section aria-label="Recent payments" className="mt-5">
-        <RecentPaymentsSection
-          transactions={ledger.transactions}
-          searchQuery={searchQuery}
-          currencySymbol={ledger.settings.currencySymbol}
-          onSelectTransaction={setEditingTx}
-          onViewAll={onViewAllHistory}
-        />
-      </section>
+          <section
+            aria-label="Spending summary"
+            className="mt-3.5 lg:mt-0 grid grid-cols-2 gap-3"
+          >
+            <SpendingBentoCard
+              metrics={metrics}
+              currencySymbol={ledger.settings.currencySymbol}
+              onNavigateAnalytics={onOpenAnalytics}
+            />
+            <DailyProofBentoCard
+              metrics={metrics}
+              currencySymbol={ledger.settings.currencySymbol}
+              onNavigateAnalytics={onOpenAnalytics}
+            />
+          </section>
+
+          <button
+            type="button"
+            onClick={handleTriggerAddPayment}
+            className="mt-3.5 lg:mt-0 w-full rounded-[20px] bg-spend-accent text-spend-bg px-5 py-3.5 font-semibold text-[15px] flex items-center justify-between active:scale-[0.98] transition-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-spend-accent focus-visible:ring-offset-2 focus-visible:ring-offset-spend-bg"
+          >
+            <span className="flex items-center gap-2.5">
+              <span className="bg-spend-bg/15 rounded-full p-1 inline-flex items-center justify-center">
+                <Plus className="h-4 w-4" aria-hidden="true" />
+              </span>
+              <span>Add Payment</span>
+            </span>
+            <span className="text-xs font-medium text-spend-bg/70">
+              Log expense
+            </span>
+          </button>
+        </div>
+
+        <section
+          aria-label="Recent payments"
+          className="mt-5 lg:mt-0 lg:col-span-7"
+        >
+          <RecentPaymentsSection
+            transactions={ledger.transactions}
+            searchQuery={searchQuery}
+            currencySymbol={ledger.settings.currencySymbol}
+            onSelectTransaction={setEditingTx}
+            onViewAll={onViewAllHistory}
+          />
+        </section>
+      </div>
 
       <WalletAdjustDrawer
         isOpen={isWalletDrawerOpen}
         onClose={() => setIsWalletDrawerOpen(false)}
       />
 
-      <AddPaymentDrawer
-        isOpen={isAddPaymentOpen}
-        onClose={() => setIsAddPaymentOpen(false)}
-        onPaymentSaved={(tx) => setLastSavedTx(tx)}
-      />
+      {!onOpenAddPayment && (
+        <AddPaymentDrawer
+          isOpen={isAddPaymentOpen}
+          onClose={() => setIsAddPaymentOpen(false)}
+          onPaymentSaved={(tx) => setLastSavedTx(tx)}
+        />
+      )}
 
       <EditPaymentDrawer
         transaction={editingTx}

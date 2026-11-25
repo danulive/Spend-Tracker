@@ -1,6 +1,8 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { AppShell } from './components/layout/AppShell'
 import { OnboardingModal } from './components/onboarding/OnboardingModal'
+import { AddPaymentDrawer } from './components/payments/AddPaymentDrawer'
+import { PaymentReceiptToast } from './components/payments/PaymentReceiptToast'
 import { AccountScreen } from './components/screens/AccountScreen'
 import { AnalyticsScreen } from './components/screens/AnalyticsScreen'
 import { HistoryScreen } from './components/screens/HistoryScreen'
@@ -11,6 +13,7 @@ import { useAuth } from './context/AuthContext'
 import { LedgerProvider, useLedger } from './context/LedgerContext'
 import { useDriveSync } from './hooks/useDriveSync'
 import type { AuthUser } from './lib/googleAuth'
+import type { Transaction } from './types/ledger'
 import type { TabId } from './types/navigation'
 
 interface AuthenticatedAppProps {
@@ -24,6 +27,12 @@ function AuthenticatedApp({ user, onSignOut }: AuthenticatedAppProps) {
     useDriveSync()
   const [activeTab, setActiveTab] = useState<TabId>('home')
   const [searchQuery, setSearchQuery] = useState('')
+  const [isAddPaymentOpen, setIsAddPaymentOpen] = useState(false)
+  const [lastSavedTx, setLastSavedTx] = useState<Transaction | null>(null)
+
+  const handleDismissToast = useCallback(() => {
+    setLastSavedTx(null)
+  }, [])
 
   const effectiveUser = {
     name: ledger.settings.customDisplayName?.trim() || user.name,
@@ -33,6 +42,12 @@ function AuthenticatedApp({ user, onSignOut }: AuthenticatedAppProps) {
 
   return (
     <>
+      <PaymentReceiptToast
+        transaction={lastSavedTx}
+        currencySymbol={ledger.settings.currencySymbol}
+        onDismiss={handleDismissToast}
+      />
+
       <AppShell
         activeTab={activeTab}
         onTabChange={setActiveTab}
@@ -41,6 +56,7 @@ function AuthenticatedApp({ user, onSignOut }: AuthenticatedAppProps) {
         syncStatus={syncStatus}
         user={effectiveUser}
         onSyncClick={() => void syncNow()}
+        onAddPaymentClick={() => setIsAddPaymentOpen(true)}
       >
         {activeTab === 'home' ? (
           <HomeScreen
@@ -48,6 +64,7 @@ function AuthenticatedApp({ user, onSignOut }: AuthenticatedAppProps) {
             user={effectiveUser}
             onViewAllHistory={() => setActiveTab('history')}
             onOpenAnalytics={() => setActiveTab('analytics')}
+            onOpenAddPayment={() => setIsAddPaymentOpen(true)}
           />
         ) : activeTab === 'analytics' ? (
           <AnalyticsScreen />
@@ -64,6 +81,12 @@ function AuthenticatedApp({ user, onSignOut }: AuthenticatedAppProps) {
           />
         )}
       </AppShell>
+
+      <AddPaymentDrawer
+        isOpen={isAddPaymentOpen}
+        onClose={() => setIsAddPaymentOpen(false)}
+        onPaymentSaved={(tx) => setLastSavedTx(tx)}
+      />
 
       <OnboardingModal
         isOpen={isInitialPullDone && !ledger.settings.onboardingCompleted}

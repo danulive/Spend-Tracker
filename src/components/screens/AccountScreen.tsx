@@ -223,7 +223,7 @@ export function AccountScreen({
 
   return (
     <div>
-      <div className="mb-4">
+      <div className="mb-4 lg:mb-5">
         <h1 className="text-xl font-bold tracking-[-0.02em] text-spend-text">
           Account
         </h1>
@@ -232,7 +232,9 @@ export function AccountScreen({
         </p>
       </div>
 
-      <BentoCard className="p-5">
+      <div className="lg:grid lg:grid-cols-2 lg:gap-5 lg:items-start">
+        <div className="space-y-3.5 lg:space-y-4">
+          <BentoCard className="p-5">
         <div className="flex items-start gap-3.5">
           <div className="shrink-0">
             <button
@@ -369,7 +371,7 @@ export function AccountScreen({
         )}
       </BentoCard>
 
-      <BentoCard className="p-5 mt-3.5 space-y-5">
+      <BentoCard className="p-5 space-y-5">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-spend-muted mb-2.5">
             CURRENCY
@@ -480,7 +482,10 @@ export function AccountScreen({
         </div>
       </BentoCard>
 
-      <BentoCard className="p-5 mt-3.5 space-y-3">
+      </div>
+
+      <div className="mt-3.5 lg:mt-0 space-y-3.5 lg:space-y-4">
+        <BentoCard className="p-5 space-y-3">
         <div className="flex items-center justify-between gap-2">
           <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-spend-muted">
             QUICK-FILL PRESETS
@@ -673,7 +678,7 @@ export function AccountScreen({
         )}
       </BentoCard>
 
-      <BentoCard className="p-5 mt-3.5">
+      <BentoCard className="p-5">
         <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-spend-muted">
           LEDGER STORAGE
         </p>
@@ -743,7 +748,7 @@ export function AccountScreen({
         type="button"
         onClick={onSignOut}
         disabled={!onSignOut}
-        className="mt-4 w-full rounded-full py-3.5 text-sm font-medium bg-spend-surface border border-spend-text/[0.10] text-spend-text flex items-center justify-center gap-2 active:scale-[0.98] transition-transform disabled:opacity-45 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-spend-accent"
+        className="mt-0.5 lg:mt-0 w-full rounded-full py-3.5 text-sm font-medium bg-spend-surface border border-spend-text/[0.10] text-spend-text flex items-center justify-center gap-2 active:scale-[0.98] transition-transform disabled:opacity-45 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-spend-accent"
       >
         <LogOut className="h-4 w-4" aria-hidden="true" />
         <span>
@@ -752,6 +757,8 @@ export function AccountScreen({
             : 'Sign Out (Connects in Problem 13)'}
         </span>
       </button>
+      </div>
+      </div>
     </div>
   )
 }

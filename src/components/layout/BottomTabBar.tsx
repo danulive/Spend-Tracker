@@ -27,7 +27,7 @@ export function BottomTabBar({ activeTab, onTabChange }: BottomTabBarProps) {
   const shouldReduceMotion = useReducedMotion()
 
   return (
-    <div className="fixed bottom-0 inset-x-0 z-40 pointer-events-none">
+    <div className="fixed bottom-0 inset-x-0 z-40 pointer-events-none lg:hidden">
       <div className="max-w-[430px] mx-auto pointer-events-auto bg-spend-surface/90 backdrop-blur-xl border-t border-spend-text/[0.10] px-2 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
         <nav aria-label="Primary navigation" className="grid grid-cols-4 gap-1">
           {NAV_TABS.map((tab) => {

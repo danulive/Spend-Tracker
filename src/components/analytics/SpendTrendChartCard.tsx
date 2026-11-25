@@ -89,11 +89,11 @@ export function SpendTrendChartCard({
         )}
       </div>
 
-      <div className="mt-4 h-[156px] relative flex items-end justify-between gap-2 pt-4 pb-1">
+      <div className="mt-4 h-[156px] lg:h-[210px] relative flex items-end justify-between gap-2 pt-4 pb-1">
         {showCapLine && (
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 bottom-[28px] h-[112px]"
+            className="pointer-events-none absolute inset-x-0 bottom-[28px] h-[112px] lg:h-[166px]"
           >
             <div
               style={{ bottom: `${capOffsetPercent}%` }}
@@ -140,7 +140,7 @@ export function SpendTrendChartCard({
               }
               className="flex-1 flex flex-col items-center h-full justify-end gap-2 group focus-visible:outline-none"
             >
-              <div className="w-full max-w-[30px] h-[112px] rounded-t-[10px] rounded-b-[6px] bg-spend-raised/60 flex items-end overflow-hidden relative group-focus-visible:ring-2 group-focus-visible:ring-spend-accent">
+              <div className="w-full max-w-[30px] lg:max-w-[44px] h-[112px] lg:h-[166px] rounded-t-[10px] rounded-b-[6px] bg-spend-raised/60 flex items-end overflow-hidden relative group-focus-visible:ring-2 group-focus-visible:ring-spend-accent">
                 <motion.div
                   initial={false}
                   animate={{ height: heightValue }}

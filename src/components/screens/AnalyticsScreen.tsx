@@ -20,7 +20,7 @@ export function AnalyticsScreen() {
 
   return (
     <div>
-      <div className="flex items-center justify-between gap-3 mb-4">
+      <div className="flex items-center justify-between gap-3 mb-4 lg:mb-5">
         <div className="min-w-0">
           <h1 className="text-xl font-bold tracking-[-0.02em] text-spend-text">
             Analytics
@@ -64,21 +64,25 @@ export function AnalyticsScreen() {
         </div>
       </div>
 
-      <div className="space-y-3.5">
-        <SpendTrendChartCard
-          summary={summary}
-          currencySymbol={ledger.settings.currencySymbol}
-          dailyLimit={ledger.settings.dailyLimit}
-        />
-        <WasteProofCard
-          summary={summary}
-          currencySymbol={ledger.settings.currencySymbol}
-        />
-        <CategoryBreakdownCard
-          slices={summary.breakdown}
-          currencySymbol={ledger.settings.currencySymbol}
-          periodTitle={summary.periodTitle}
-        />
+      <div className="space-y-3.5 lg:space-y-0 lg:grid lg:grid-cols-12 lg:gap-6 lg:items-start">
+        <div className="space-y-3.5 lg:col-span-7 lg:space-y-4">
+          <SpendTrendChartCard
+            summary={summary}
+            currencySymbol={ledger.settings.currencySymbol}
+            dailyLimit={ledger.settings.dailyLimit}
+          />
+          <WasteProofCard
+            summary={summary}
+            currencySymbol={ledger.settings.currencySymbol}
+          />
+        </div>
+        <div className="lg:col-span-5">
+          <CategoryBreakdownCard
+            slices={summary.breakdown}
+            currencySymbol={ledger.settings.currencySymbol}
+            periodTitle={summary.periodTitle}
+          />
+        </div>
       </div>
     </div>
   )

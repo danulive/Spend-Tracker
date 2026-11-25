@@ -3,9 +3,10 @@ import { X } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import { CATEGORIES, CATEGORY_MAP } from '../../constants/categories'
 import { useLedger } from '../../context/LedgerContext'
+import { useIsDesktop } from '../../hooks/useIsDesktop'
 import { cn } from '../../lib/cn'
 import { formatCurrency, roundMoney } from '../../lib/format'
-import { APPLE_SPRING } from '../../lib/motion'
+import { getSheetMotionProps } from '../../lib/motion'
 import { getSmartFrequentPresets } from '../../lib/presets'
 import type { CategoryId, FrequentPreset, Transaction } from '../../types/ledger'
 import { Button } from '../ui/Button'
@@ -35,6 +36,8 @@ function AddPaymentSheet({
 }) {
   const { ledger, addTransaction } = useLedger()
   const shouldReduceMotion = useReducedMotion()
+  const isDesktop = useIsDesktop()
+  const sheetMotion = getSheetMotionProps(Boolean(shouldReduceMotion), isDesktop)
   const amountInputRef = useRef<HTMLInputElement>(null)
 
   const [amountInput, setAmountInput] = useState('')
@@ -133,7 +136,7 @@ function AddPaymentSheet({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.18 }}
-      className="fixed inset-0 z-50 flex items-end justify-center"
+      className="fixed inset-0 z-50 flex items-end lg:items-center justify-center lg:p-6"
     >
       <div
         onClick={onClose}
@@ -142,14 +145,11 @@ function AddPaymentSheet({
       />
 
       <motion.div
-        initial={shouldReduceMotion ? { opacity: 0 } : { y: '100%' }}
-        animate={shouldReduceMotion ? { opacity: 1 } : { y: 0 }}
-        exit={shouldReduceMotion ? { opacity: 0 } : { y: '100%' }}
-        transition={shouldReduceMotion ? { duration: 0 } : APPLE_SPRING}
-        className="relative z-10 max-w-[430px] mx-auto w-full rounded-t-[28px] bg-spend-surface border-t border-x border-spend-text/[0.10] px-5 pt-3 pb-[max(1.5rem,env(safe-area-inset-bottom))] max-h-[90dvh] overflow-y-auto"
+        {...sheetMotion}
+        className="relative z-10 max-w-[430px] lg:max-w-[460px] mx-auto w-full rounded-t-[28px] lg:rounded-[28px] bg-spend-surface border-t border-x lg:border border-spend-text/[0.10] px-5 pt-3 pb-[max(1.5rem,env(safe-area-inset-bottom))] lg:p-6 max-h-[90dvh] overflow-y-auto"
       >
         <div
-          className="w-10 h-1 rounded-full bg-spend-text/20 mx-auto mb-4"
+          className="w-10 h-1 rounded-full bg-spend-text/20 mx-auto mb-4 lg:hidden"
           aria-hidden="true"
         />
 
